@@ -210,9 +210,7 @@ violation(O1, X) :- assign_setup(S1, G, O1), no_last(setup, G, O1),
                     setup_change(G, S1, T1, Min_r1),
                     X = #count{O2 : pair(G, O1, O2, Pro_t1), not ignore(setup, G, O1, O2)}, X < Min_r1 - 1.
 
-:~ assign_setup(Setup_n1, G, O1), no_last(G, O1),
-   setup_change(G, Setup_n1, Setup_t1, Min_r1),
-    #count{O2 : pair(G, O1, O2, Pro_t1), not ignore(setup, G, O1, O2)}  < Min_r1 - 1 . [1@1, O1]
+
 
 
 first_step((L, P, Cur_s, Prio), R) :- step_lot(L, P, Cur_s, Prio), lot_release(L, R), not setup_duration((L, P, Cur_s, Prio), _, _),
@@ -240,6 +238,15 @@ first_step((L, P, Cur_s, Prio), R + Setup_t) :- lot_release(L, R),
 #program opt(b).
 #external bound(b).
 &diff{ makespan - 0} <= b :- bound(b).
+
+
+#program weak(b).
+#external bound(b).
+&diff{ makespan - 0} <= b :- bound(b).
+
+:~ assign_setup(Setup_n1, G, O1), no_last(G, O1),
+   setup_change(G, Setup_n1, Setup_t1, Min_r1),
+   #count{O2 : pair(G, O1, O2, Pro_t1), not ignore(setup, G, O1, O2)}  < Min_r1 - 1 . [1@1, O1]
 
 #show.
 %#show mach_assign/6.
